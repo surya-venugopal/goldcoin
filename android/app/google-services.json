@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "667511558467",
+    "firebase_url": "https://stocklot-dbea1.firebaseio.com",
+    "project_id": "stocklot-dbea1",
+    "storage_bucket": "stocklot-dbea1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667511558467:android:1aef367abe058f05c9dff6",
+        "android_client_info": {
+          "package_name": "com.example.stocklot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667511558467-rq9g3jcivi0g1u0n1b2qbo937s1hs0e5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.stocklot",
+            "certificate_hash": "5f1a22285efe54dda3de9eac51c0d29c8ec06f46"
+          }
+        },
+        {
+          "client_id": "667511558467-84f152pjb0aq8r1qsfb8822pktlov0ft.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7l2Jp3e5DhpbhbMXIbJCxiddXuL0jp0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667511558467-84f152pjb0aq8r1qsfb8822pktlov0ft.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
