@@ -34,7 +34,9 @@ class _MainScreenState extends State<MainScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   bool isConnected = false;
 
-  start() async{
+  DateTime endTime;
+
+  start() async {
     var doc = await db.collection("version").doc("version").get();
     if (doc.data()['version'] == "1.0.1") {
       setState(() {
@@ -59,6 +61,8 @@ class _MainScreenState extends State<MainScreen> {
           //     });
           //   });
           // }
+          endTime = Provider.of<Users>(context, listen: false).getUser.endTime;
+          print(endTime.toString());
           db
               .collection("User")
               .doc(Provider.of<Users>(context, listen: false).getUser.phone)
@@ -125,6 +129,7 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: Theme.of(context).primaryColor,
           textColor: Colors.white,
           toastLength: Toast.LENGTH_LONG);
+
       dbListener();
       setState(() {
         versionCorrect = true;
@@ -205,159 +210,223 @@ class _MainScreenState extends State<MainScreen> {
       "Unit": "UT"
     };
     return Scaffold(
-        appBar: !versionCorrect || _isInit || !isConnected
-            ? null
-            : AppBar(
-                elevation: 0,
-                title: Text(
-                  "GoldCoin",
-                  style: TextStyle(fontSize: 16),
-                ),
-                actions: [
-                  _isLoading || _isInit || !versionCorrect
-                      ? Container()
-                      : IconButton(
-                          icon: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(SearchProducts.routeName);
-                          },
-                        ),
-                  _isLoading || _isInit || !versionCorrect
-                      ? Container()
-                      : GestureDetector(
-                          onTap: () {
-                            Navigator.of(context)
-                                .pushNamed(ProfilePersonalInfo.routeName);
-                          },
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundImage:
-                                user.dp == null ? null : NetworkImage(user.dp),
-                          ),
-                        ),
-                ],
-              ),
-        body: _isLoading || _isInit
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : !isConnected
-                ? Container(
-                    width: size.width,
-                    height: size.height,
-                    child: Image.asset(
-                      "assets/images/ConnectionLost.png",
-                      fit: BoxFit.cover,
-                    ))
-                : !versionCorrect
-                    ? Center(
-                        child: Text("Please update the app"),
-                      )
-                    : Container(
-                        // color: Theme.of(context).primaryColor,
-                        decoration:
-                            BoxDecoration(gradient: MyApp.getGradient()),
-                        child: ListView(
-                          children: [
-                            SizedBox(height: 10),
-                            StreamBuilder(
-                              stream: db
-                                  .collection("Categories")
-                                  .doc("categories")
-                                  .snapshots(),
-                              builder: (_,
-                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text('Something went wrong');
-                                }
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(
-                                      child: CircularProgressIndicator());
-                                }
-                                var doc = snapshot.data.data();
-
-                                var keys = doc.keys.toList(growable: false)
-                                  ..sort(
-                                      (k1, k2) => doc[k1].compareTo(doc[k2]));
-
-                                // LinkedHashMap sortedMap =
-                                //     new LinkedHashMap.fromIterable(keys,
-                                //         key: (k) => k, value: (k) => doc[k]);
-
-                                return Container(
-                                  width: double.infinity,
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: [
-                                        ...keys.map((key) {
-                                          return Row(
-                                            children: [
-                                              SizedBox(width: 5),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.of(context)
-                                                      .pushNamed(
-                                                          ProductScreen
-                                                              .routeName,
-                                                          arguments: key);
-                                                },
-                                                child: Container(
-                                                  child: Column(
-                                                    children: [
-                                                      CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        radius: 25,
-                                                        child: Text(
-                                                          ribbonMap[key],
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColor),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        key,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  width: size.width / 5,
-                                                  height: 90,
-                                                  // color: Colors.white,
-                                                ),
-                                              ),
-                                              SizedBox(width: 5)
-                                            ],
-                                          );
-                                        })
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
+      appBar: !versionCorrect || _isInit || !isConnected
+          ? null
+          : endTime.compareTo(DateTime.now()) < 0
+              ? null
+              : AppBar(
+                  elevation: 0,
+                  title: Text(
+                    "GoldCoin",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  actions: [
+                    _isLoading || _isInit || !versionCorrect
+                        ? Container()
+                        : IconButton(
+                            icon: Icon(
+                              Icons.search,
+                              color: Colors.white,
                             ),
-                            SizedBox(height: 10),
-                            MainScreenWidgets()
-                          ],
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(SearchProducts.routeName);
+                            },
+                          ),
+                    _isLoading || _isInit || !versionCorrect
+                        ? Container()
+                        : GestureDetector(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(ProfilePersonalInfo.routeName);
+                            },
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundImage: user.dp == null
+                                  ? null
+                                  : NetworkImage(user.dp),
+                            ),
+                          ),
+                  ],
+                ),
+      body: _isLoading || _isInit
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : !isConnected
+              ? Container(
+                  width: size.width,
+                  height: size.height,
+                  child: Image.asset(
+                    "assets/images/ConnectionLost.png",
+                    fit: BoxFit.cover,
+                  ))
+              : !versionCorrect
+                  ? Center(
+                      child: Text("Please update the app"),
+                    )
+                  : endTime.compareTo(DateTime.now()) < 0
+                      ? Center(
+                          child: Text(
+                              "Your subscription validity has ended.\nPlease contact admin to gain access."),
+                        )
+                      : Container(
+                          // color: Theme.of(context).primaryColor,
+                          decoration:
+                              BoxDecoration(gradient: MyApp.getGradient()),
+                          child: ListView(
+                            children: [
+                              SizedBox(height: 10),
+                              StreamBuilder(
+                                stream: db
+                                    .collection("Categories")
+                                    .doc("categories")
+                                    .snapshots(),
+                                builder: (_,
+                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text('Something went wrong');
+                                  }
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  var doc = snapshot.data.data();
+
+                                  var keys = doc.keys.toList(growable: false)
+                                    ..sort(
+                                        (k1, k2) => doc[k1].compareTo(doc[k2]));
+
+                                  // LinkedHashMap sortedMap =
+                                  //     new LinkedHashMap.fromIterable(keys,
+                                  //         key: (k) => k, value: (k) => doc[k]);
+
+                                  return Container(
+                                    width: double.infinity,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          ...keys.map((key) {
+                                            return Row(
+                                              children: [
+                                                SizedBox(width: 5),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            ProductScreen
+                                                                .routeName,
+                                                            arguments: key);
+                                                  },
+                                                  child: Container(
+                                                    child: Column(
+                                                      children: [
+                                                        CircleAvatar(
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          radius: 25,
+                                                          child: Text(
+                                                            ribbonMap[key],
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .primaryColor),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          key,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    width: size.width / 5,
+                                                    height: 90,
+                                                    // color: Colors.white,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 5)
+                                              ],
+                                            );
+                                          })
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              SizedBox(height: 10),
+                              MainScreenWidgets()
+                            ],
+                          ),
                         ),
-                      ));
+      floatingActionButton: _isInit
+          ? null
+          : endTime.compareTo(DateTime.now()) > 0
+              ? null
+              : FloatingActionButton.extended(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          return AlertDialog(
+                            content: Container(
+                              width: size.width / 2,
+                              height: size.width / 2,
+                              child: Padding(
+                                padding: EdgeInsets.all(15),
+                                child: RichText(
+                                  // "To advertise here, contact admin\n\nemail : abcd@gmail.com\nphone : 9486532551",
+                                  text: TextSpan(
+                                      text: "You can contact admin via",
+                                      style: TextStyle(
+                                          color: Colors.black87, fontSize: 16),
+                                      children: [
+                                        TextSpan(
+                                            text: "\n\n\nEmail : ",
+                                            children: [
+                                              TextSpan(
+                                                  text: "abcd@gmail.com",
+                                                  style: TextStyle())
+                                            ]),
+                                        TextSpan(
+                                            text: "\n\nPhone : ",
+                                            children: [
+                                              TextSpan(
+                                                  text: "+91 9486532551",
+                                                  style: TextStyle())
+                                            ]),
+                                      ]),
+                                ),
+                              ),
+                            ),
+                            actions: [
+                              FlatButton(
+                                onPressed: () {
+                                  MyApp.makePhoneCall("tel:+919486532551");
+                                },
+                                textColor: Theme.of(context).primaryColor,
+                                child: Text("Call"),
+                              )
+                            ],
+                          );
+                        });
+                  },
+                  label: Text("Admin"),
+                  icon: Icon(Icons.admin_panel_settings),
+                ),
+    );
   }
 }

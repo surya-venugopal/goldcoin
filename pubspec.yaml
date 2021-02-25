@@ -64,6 +64,7 @@ dev_dependencies:
   agora_rtc_engine: ^1.0.8
   permission_handler: 3.0.0
   scratcher: ^1.4.0
+  carousel_slider: ^3.0.0
 
 
 # For information on the generic Dart part of this file, see the

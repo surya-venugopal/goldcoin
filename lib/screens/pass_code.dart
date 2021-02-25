@@ -6,6 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:stocklot/providers/pass_code.dart';
 
 import '../main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:video_player/video_player.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: must_be_immutable
 class PassCode extends StatefulWidget {
@@ -40,100 +43,12 @@ class _PassCodeState extends State<PassCode> {
       child: Scaffold(
         body: Container(
           width: double.infinity,
-          padding: EdgeInsets.only(top: 20,left: 5,right: 5),
+          padding: EdgeInsets.only(top: 20, left: 5, right: 5),
           margin: EdgeInsets.only(top: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-
-              ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                child: Container(
-                  width: size.width,
-                  height: 200,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      border: Border.all(
-                          width: 1, color: Theme.of(context).accentColor)),
-                  child: Stack(
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        width: size.width,
-                        height: 200,
-                        child: Image.network(
-                                "https://cdn.relevance.com/wp-content/uploads/2018/04/coca-cola-ad.jpg",
-                                fit: BoxFit.cover,
-                                width: size.width,
-                              ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: IconButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (ctx) {
-                                  return AlertDialog(
-                                    content: Container(
-                                      width: size.width / 2,
-                                      height: size.width / 2,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15),
-                                        child: RichText(
-                                          // "To advertise here, contact admin\n\nemail : abcd@gmail.com\nphone : 9486532551",
-                                          text: TextSpan(
-                                              text:
-                                                  "To advertise here, contact admin.",
-                                              style: TextStyle(
-                                                  color: Colors.black87,
-                                                  fontSize: 16),
-                                              children: [
-                                                TextSpan(
-                                                    text: "\n\nEmail : ",
-                                                    children: [
-                                                      TextSpan(
-                                                          text:
-                                                              "abcd@gmail.com",
-                                                          style: TextStyle())
-                                                    ]),
-                                                TextSpan(
-                                                    text: "\nPhone : ",
-                                                    children: [
-                                                      TextSpan(
-                                                          text:
-                                                              "+91 9486532551",
-                                                          style: TextStyle())
-                                                    ]),
-                                              ]),
-                                        ),
-                                      ),
-                                    ),
-                                    actions: [
-                                      FlatButton(
-                                        onPressed: () {
-                                          MyApp.makePhoneCall("tel:+919486532551");
-                                        },
-                                        textColor:
-                                            Theme.of(context).primaryColor,
-                                        child: Text("Call"),
-                                      )
-                                    ],
-                                  );
-                                });
-                          },
-                          icon: Icon(
-                            Icons.info,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                ),
-              ),
+              Ad(),
               SizedBox(height: 10),
               Text(
                 widget.topic,
@@ -609,6 +524,165 @@ class _PassCodeState extends State<PassCode> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class Ad extends StatefulWidget {
+
+  @override
+  _AdState createState() => _AdState();
+}
+
+class _AdState extends State<Ad> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  VideoPlayerController _controller;
+  DocumentSnapshot doc;
+  var audioOn = true;
+
+  Widget contactAdmin(size, text) {
+    return AlertDialog(
+      content: Container(
+        width: size.width / 2,
+        height: size.width / 2,
+        child: Padding(
+          padding: EdgeInsets.all(15),
+          child: RichText(
+            // "To advertise here, contact admin\n\nemail : abcd@gmail.com\nphone : 9486532551",
+            text: TextSpan(
+                text: text,
+                style: TextStyle(color: Colors.black87, fontSize: 16),
+                children: [
+                  TextSpan(text: "\n\nEmail : ", children: [
+                    TextSpan(text: "abcd@gmail.com", style: TextStyle())
+                  ]),
+                  TextSpan(text: "\nPhone : ", children: [
+                    TextSpan(text: "+91 9486532551", style: TextStyle())
+                  ]),
+                ]),
+          ),
+        ),
+      ),
+      actions: [
+        FlatButton(
+          onPressed: () {
+            MyApp.makePhoneCall("tel:+919486532551");
+          },
+          textColor: Theme.of(context).primaryColor,
+          child: Text("Call"),
+        )
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    Future.delayed(Duration(seconds: 0), () async {
+      doc = await db.collection("Ads").doc("passScreen").get();
+      if (doc.data()['type'] == 1) {
+        _controller = VideoPlayerController.network(doc.data()['uri'])
+          ..initialize().then((_) {
+            setState(() {});
+          });
+        _controller.setVolume(5);
+        _controller.setLooping(true);
+        _controller.play();
+      }
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return ClipRRect(
+      borderRadius: BorderRadius.all(Radius.circular(5)),
+      child: Container(
+        width: size.width,
+        height: 200,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            border: Border.all(width: 1, color: Theme.of(context).accentColor)),
+        child:Stack(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    width: size.width,
+                    height: 200,
+                    child: doc == null
+                        ? Text("Ads will appear here")
+                        : GestureDetector(
+                      onTap: () async {
+                        var url = doc.data()['link'].toString();
+                        if (await canLaunch(url))
+                          await launch(url);
+                        else
+                          // can't launch url, there is some error
+                          throw "Could not launch $url";
+                      },
+                      child: doc.data()['type'] == 1
+                          ? _controller.value.initialized
+                          ? AspectRatio(
+                        aspectRatio: _controller.value.aspectRatio,
+                        child: VideoPlayer(_controller),
+                      )
+                          : Container()
+                          : Image.network(
+                        doc.data()['uri'],
+                        fit: BoxFit.cover,
+                        width: size.width,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: IconButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return contactAdmin(
+                                  size, "To advertise here, contact admin.");
+                            });
+                      },
+                      icon: Icon(
+                        Icons.info,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  if (doc !=null && doc.data()['type'] == 1)
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      child: FloatingActionButton(
+                        mini: true,
+                        onPressed: () {
+                          if (!audioOn) {
+                            _controller.setVolume(5);
+                            audioOn = true;
+                          } else {
+                            _controller.setVolume(0);
+                            audioOn = false;
+                          }
+                        },
+                        child: Icon(
+                          Icons.audiotrack,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+        alignment: Alignment.center,
       ),
     );
   }

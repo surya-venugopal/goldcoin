@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
 class UserModel {
   String mailId;
   String name;
@@ -17,23 +18,24 @@ class UserModel {
   bool isLoggedIn;
   int userVideoId;
   bool isVerified;
+  DateTime endTime;
 
-  UserModel({
-    this.isVerified,
-    this.phone,
-    this.dob,
-    this.mailId,
-    this.name,
-    this.address,
-    this.isLoggedIn,
-    this.fcmToken,
-    this.individualOrCompany,
-    this.description,
-    this.rating,
-    this.dp,
-    this.pin,
-    this.userVideoId,
-  });
+  UserModel(
+      {this.isVerified,
+      this.phone,
+      this.dob,
+      this.mailId,
+      this.name,
+      this.address,
+      this.isLoggedIn,
+      this.fcmToken,
+      this.individualOrCompany,
+      this.description,
+      this.rating,
+      this.dp,
+      this.pin,
+      this.userVideoId,
+      this.endTime});
 }
 
 class Users with ChangeNotifier {
@@ -52,7 +54,8 @@ class Users with ChangeNotifier {
     isLoggedIn: false,
     pin: "0",
     userVideoId: 0,
-      isVerified:false,
+    isVerified: false,
+    endTime: null,
   );
 
   void set(String phone) {
@@ -69,23 +72,25 @@ class Users with ChangeNotifier {
         pin: "0",
         isLoggedIn: false,
         isVerified: false,
+        endTime: null,
         userVideoId: 0);
   }
 
   void update(
       {String name,
-        DateTime dob,
-        String address,
-        bool isLoggedIn,
-        String fcmToken,
-        String pin,
-        String mailId,
-        int individualOrCompany,
-        String description,
-        int rating,
-        String dp,
-        bool isVerified,
-        int userVideoId}) {
+      DateTime dob,
+      String address,
+      bool isLoggedIn,
+      String fcmToken,
+      String pin,
+      String mailId,
+      int individualOrCompany,
+      String description,
+      int rating,
+      String dp,
+      bool isVerified,
+      DateTime endTime,
+      int userVideoId}) {
     _userModel.name = name;
     _userModel.dob = dob;
     _userModel.address = address;
@@ -98,6 +103,8 @@ class Users with ChangeNotifier {
     _userModel.dp = dp;
     _userModel.userVideoId = userVideoId;
     _userModel.isVerified = isVerified;
+    _userModel.endTime = endTime;
+
     notifyListeners();
   }
 
@@ -167,21 +174,19 @@ class Users with ChangeNotifier {
         individualOrCompany: value.data()['individualOrCompany'],
         userVideoId: value.data()['userVideoId'],
         isVerified: value.data()['isVerified'],
+        endTime: (value.data()['endTime'] as Timestamp).toDate()
       );
       FirebaseMessaging fbm = FirebaseMessaging.instance;
       String fcmToken;
-      if(kIsWeb){
+      if (kIsWeb) {
         // fcmToken = await fbm.getToken(vapidKey: "BHdgq1CxatjRYWc0ptigq4RUAleadt4KpL4Bqflw-J84tTziLuF9Dq13p4yO14hn4opjf4Q2jvblFGnwT_D9Xtc");
-      }
-      else{
+      } else {
         fcmToken = await fbm.getToken();
         await db
             .collection("User")
             .doc(_userModel.phone)
             .update({"fcmToken": fcmToken});
       }
-
-
     }
 
     return temp;

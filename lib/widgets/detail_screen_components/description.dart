@@ -76,33 +76,33 @@ class Description extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    left: getProportionateScreenWidth(20),
-                    right: 5,
-                    bottom: 20),
-                child: Text(
-                  "Quantity:",
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: getProportionateScreenWidth(20),
-                    right: getProportionateScreenWidth(20),
-                    bottom: 20),
-                child: Text(
-                  product.quantity,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Padding(
+          //       padding: EdgeInsets.only(
+          //           left: getProportionateScreenWidth(20),
+          //           right: 5,
+          //           bottom: 20),
+          //       child: Text(
+          //         "Quantity:",
+          //         style: TextStyle(color: Colors.white70, fontSize: 16),
+          //       ),
+          //     ),
+          //     Padding(
+          //       padding: EdgeInsets.only(
+          //           left: getProportionateScreenWidth(20),
+          //           right: getProportionateScreenWidth(20),
+          //           bottom: 20),
+          //       child: Text(
+          //         product.quantity,
+          //         style: TextStyle(
+          //             color: Colors.white,
+          //             fontSize: 16,
+          //             fontWeight: FontWeight.bold),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           Padding(
             padding: EdgeInsets.only(
                 left: getProportionateScreenWidth(20),
