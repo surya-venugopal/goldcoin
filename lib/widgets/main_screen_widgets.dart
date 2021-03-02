@@ -264,6 +264,7 @@ class _MainScreenWidgetsState extends State<MainScreenWidgets> {
                           GestureDetector(
                             onTap: () {
                               Share.share("Download Goldcoin from playstore");
+
                             },
                             child: Container(
                               child: Column(

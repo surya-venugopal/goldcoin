@@ -95,14 +95,6 @@ class Products with ChangeNotifier {
         isOffer: product.isOffer,
         category: product.category
       );
-      await db
-          .collection("User")
-          .doc(product.personId)
-          .collection("history")
-          .add({
-        "action": "Your product ${product.title} has been added.",
-        "time": time
-      });
 
       _items.add(newProduct);
       _myItems.add(newProduct);

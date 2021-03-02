@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
 
   start() async {
     var doc = await db.collection("version").doc("version").get();
-    if (doc.data()['version'] == "1.0.1") {
+    if (doc.data()['version'] == "2.0.0") {
       setState(() {
         _isLoading = true;
       });
@@ -236,9 +236,12 @@ class _MainScreenState extends State<MainScreen> {
                     _isLoading || _isInit || !versionCorrect
                         ? Container()
                         : GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
+                            onTap: () async{
+                              var dp = await Navigator.of(context)
                                   .pushNamed(ProfilePersonalInfo.routeName);
+                              setState(() {
+                                user.dp = dp;
+                              });
                             },
                             child: CircleAvatar(
                               radius: 20,

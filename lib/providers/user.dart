@@ -121,6 +121,7 @@ class Users with ChangeNotifier {
       'description': _userModel.description,
       'rating': _userModel.rating,
       'userVideoId': _userModel.userVideoId,
+      'endTime':_userModel.endTime
     };
   }
 

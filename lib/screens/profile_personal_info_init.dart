@@ -167,7 +167,7 @@ class _ProfilePersonalInfoInitState extends State<ProfilePersonalInfoInit> {
                                         showDatePicker(
                                           context: context,
                                           initialDate: DateTime.now(),
-                                          firstDate: DateTime(1965),
+                                          firstDate: DateTime(1945),
                                           lastDate: DateTime.now(),
                                         ).then((value) {
                                           if (value == null) return;
@@ -293,7 +293,8 @@ class _ProfilePersonalInfoInitState extends State<ProfilePersonalInfoInit> {
 
         // userVideoId = users.id;
 
-        print(userVideoId);
+
+
         userProvider.update(
           name: nameController.text,
           dob: selectedDate,
@@ -306,7 +307,8 @@ class _ProfilePersonalInfoInitState extends State<ProfilePersonalInfoInit> {
           description: descriptionController.text,
           individualOrCompany: individualOrCompany,
           // userVideoId: userVideoId,
-          isVerified: false
+          isVerified: false,
+          endTime: DateTime.now().add(Duration(days: 30))
         );
 
         db

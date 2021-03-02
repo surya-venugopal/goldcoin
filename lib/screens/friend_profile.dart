@@ -91,11 +91,7 @@ class _FriendProfileState extends State<FriendProfile> {
                                           : NetworkImage(doc['dp']),
                                 ),
                                 if (isVerified != null && isVerified == true)
-                                  Text(
-                                    "Verified",
-                                    style: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                  ),
+                                  Icon(Icons.verified,color: Theme.of(context).primaryColor,),
                                 SizedBox(
                                   height: 20,
                                 ),

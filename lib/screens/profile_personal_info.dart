@@ -31,6 +31,7 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
   bool isVerified = false;
   int rating;
   String pin;
+  DateTime endTime;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
   FirebaseMessaging fbm = FirebaseMessaging.instance;
@@ -61,6 +62,7 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
     Provider.of<PassCodeModel>(context, listen: false).pin =
         Provider.of<Users>(context, listen: false).getUser.pin;
     isVerified = Provider.of<Users>(context, listen: false).getUser.isVerified;
+    endTime = Provider.of<Users>(context, listen: false).getUser.endTime;
     super.initState();
   }
 
@@ -216,12 +218,14 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
                                     ),
                                     if (isVerified != null &&
                                         isVerified == true)
-                                      Text(
-                                        "Verified",
-                                        style: TextStyle(
+                                      Container(
+                                          width: double.infinity,
+                                          alignment: Alignment.center,
+                                          child: Icon(
+                                            Icons.verified,
                                             color:
-                                                Theme.of(context).primaryColor),
-                                      ),
+                                                Theme.of(context).primaryColor,
+                                          )),
                                     TextFormField(
                                       controller: nameController,
                                       autovalidateMode: AutovalidateMode.always,
@@ -271,7 +275,7 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
                                         showDatePicker(
                                           context: context,
                                           initialDate: selectedDate,
-                                          firstDate: DateTime(1965),
+                                          firstDate: DateTime(1945),
                                           lastDate: DateTime.now(),
                                         ).then((value) {
                                           if (value == null) return;
@@ -364,11 +368,10 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   String fcmToken;
-                  if(kIsWeb){
+                  if (kIsWeb) {
                     // fcmToken = await fbm.getToken(vapidKey: "BHdgq1CxatjRYWc0ptigq4RUAleadt4KpL4Bqflw-J84tTziLuF9Dq13p4yO14hn4opjf4Q2jvblFGnwT_D9Xtc");
                     fcmToken = "";
-                  }
-                  else{
+                  } else {
                     fcmToken = await fbm.getToken();
                   }
                   Fluttertoast.showToast(
@@ -394,6 +397,7 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
                       description: descriptionController.text,
                       individualOrCompany: individualOrCompany,
                       isVerified: isVerified,
+                      endTime: endTime,
                       userVideoId: Provider.of<Users>(context, listen: false)
                           .getUser
                           .userVideoId);
@@ -402,7 +406,7 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
                       .collection("User")
                       .doc(user.phone)
                       .set(userProvider.getMap)
-                      .then((value) => Navigator.of(context).pop())
+                      .then((value) => Navigator.of(context).pop(user.dp))
                       .catchError((error) {
                     print(error);
                   });
