@@ -37,44 +37,60 @@ class AllUsers extends StatelessWidget {
           return ListView.builder(
             itemCount: docs.length,
             itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  backgroundImage: docs[index].data()['dp'] != null &&
-                          docs[index].data()['dp'] != ""
-                      ? NetworkImage(docs[index].data()['dp'])
-                      : null,
-                  child: docs[index].data()['dp'] != null &&
-                          docs[index].data()['dp'] != ""
-                      ? null
-                      : Text(
-                          docs[index].data()['name'][0],
-                          style: TextStyle(color: Colors.white),
-                        ),
-                ),
-                title: Text(docs[index].data()['name']),
-                subtitle: Column(
-                  children: [
-                    Row(
+              return Column(
+                children: [
+                  ListTile(
+                    leading: Container(
+                      width: size.width * 0.2,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundImage: docs[index].data()['dp'] != null &&
+                                    docs[index].data()['dp'] != ""
+                                ? NetworkImage(docs[index].data()['dp'])
+                                : null,
+                            child: docs[index].data()['dp'] != null &&
+                                    docs[index].data()['dp'] != ""
+                                ? null
+                                : Text(
+                                    docs[index].data()['name'][0],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                          ),
+                          SizedBox(width: 10),
+                          docs[index].data()['isVerified'] != null &&
+                                  docs[index].data()['isVerified'] == true
+                              ? Icon(
+                                  Icons.verified,
+                                  color: Theme.of(context).primaryColor,
+                                )
+                              : Container()
+                        ],
+                      ),
+                    ),
+                    title: Text(
+                      docs[index].data()['name'],
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    subtitle: Column(
                       children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.amber,
+                        Row(
+                          children: [
+                            Text(docs[index].data()['rating'].toString()),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                          ],
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(docs[index].data()['rating'].toString())
                       ],
                     ),
-                    Divider(),
-                    SizedBox(
-                      height: 5,
-                    )
-                  ],
-                ),
-                trailing:
-                    docs[index].id == Provider.of<Users>(context).getUser.phone
+                    trailing: docs[index].id ==
+                            Provider.of<Users>(context).getUser.phone
                         ? null
                         : IconButton(
                             icon: Icon(
@@ -90,6 +106,9 @@ class AllUsers extends StatelessWidget {
                               });
                             },
                           ),
+                  ),
+                  Divider()
+                ],
               );
             },
           );

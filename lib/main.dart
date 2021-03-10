@@ -1,7 +1,9 @@
 import 'package:stocklot/providers/pass_code.dart';
+import 'package:stocklot/providers/wins.dart';
 import 'package:stocklot/screens/all_users.dart';
 import 'package:stocklot/screens/friend_profile.dart';
 import 'package:stocklot/screens/main_screen.dart';
+import 'package:stocklot/screens/refererScreen.dart';
 import 'package:stocklot/screens/requests_screen.dart';
 import 'package:stocklot/screens/search_products.dart';
 import 'package:stocklot/screens/product_screen.dart';
@@ -23,7 +25,6 @@ import 'screens/user_products_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/orders.dart';
 import 'providers/products.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -107,7 +108,7 @@ class _MyAppState extends State<MyApp> {
           create: (ctx) => _isInit ? null : Products(),
         ),
         ChangeNotifierProvider(
-          create: (ctx) => _isInit ? null : Orders(),
+          create: (ctx) => _isInit ? null : Wins(),
         ),
         ChangeNotifierProvider(
           create: (ctx) => _isInit ? null : Users(),
@@ -154,6 +155,7 @@ class _MyAppState extends State<MyApp> {
           WhoViewedMyProduct.routeName: (ctx) => WhoViewedMyProduct(),
           AllUsers.routeName: (ctx) => AllUsers(),
           SearchUser.routeName: (ctx) => SearchUser(),
+          RefererScreen.routeName:(ctx)=>RefererScreen(),
         },
       ),
     );

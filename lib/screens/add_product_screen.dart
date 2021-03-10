@@ -84,7 +84,7 @@ class _AddProductState extends State<AddProduct> {
         var videoUrl;
         final FirebaseStorage _storage = FirebaseStorage.instance;
         var date = DateTime.now().millisecondsSinceEpoch.toString();
-        if (_video != null) {
+        if (_video != null && _videoPlayerController.value.duration <= Duration(seconds: 120)) {
           await _storage
               .ref()
               .child(
@@ -318,13 +318,13 @@ class _AddProductState extends State<AddProduct> {
                                 //   ],
                                 // ),
                                 TextFormField(
-                                  style: TextStyle(height: 1.5,color: Colors.white),
+                                  style: TextStyle(
+                                      height: 1.5, color: Colors.white),
                                   initialValue: initValues['description'],
                                   decoration: InputDecoration(
                                     labelText: 'Description *',
                                     labelStyle: TextStyle(color: Colors.white),
                                     errorStyle: TextStyle(color: Colors.white),
-
                                   ),
 
                                   maxLines: 3,
@@ -376,7 +376,6 @@ class _AddProductState extends State<AddProduct> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-
                               Container(
                                 // height: images.length > 3
                                 //     ? 300
@@ -432,14 +431,43 @@ class _AddProductState extends State<AddProduct> {
                                       ),
                                     )
                                   : _videoPlayerController.value.initialized
-                                      ? AspectRatio(
-                                          aspectRatio: _videoPlayerController
-                                              .value.aspectRatio,
-                                          child: GestureDetector(
+                                      ? _videoPlayerController.value.duration >
+                                              Duration(seconds: 120)
+                                          ? GestureDetector(
                                               onTap: () => _pickVideo(),
-                                              child: VideoPlayer(
-                                                  _videoPlayerController)),
-                                        )
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: Container(
+                                                  height: 150,
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10),
+                                                    ),
+                                                    border: Border.all(
+                                                      width: _video == null
+                                                          ? 2
+                                                          : 0,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                      "Please add a video of duration less than 2 minutes."),
+                                                ),
+                                              ),
+                                            )
+                                          : AspectRatio(
+                                              aspectRatio:
+                                                  _videoPlayerController
+                                                      .value.aspectRatio,
+                                              child: GestureDetector(
+                                                  onTap: () => _pickVideo(),
+                                                  child: VideoPlayer(
+                                                      _videoPlayerController)),
+                                            )
                                       : Container(),
                             ],
                           ),
@@ -650,7 +678,6 @@ class _AddProductState extends State<AddProduct> {
                               onPressed: () {
                                 Navigator.of(ctx2).pop();
                                 saveForm();
-
                               },
                               child: Text(
                                 "I agree",

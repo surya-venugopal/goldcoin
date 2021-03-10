@@ -7,7 +7,6 @@ class UserModel {
   String mailId;
   String name;
   String phone;
-  DateTime dob;
   String address;
   String fcmToken;
   String pin;
@@ -23,7 +22,6 @@ class UserModel {
   UserModel(
       {this.isVerified,
       this.phone,
-      this.dob,
       this.mailId,
       this.name,
       this.address,
@@ -45,7 +43,6 @@ class Users with ChangeNotifier {
     name: "",
     mailId: "",
     phone: "",
-    dob: null,
     rating: 10,
     individualOrCompany: null,
     description: "",
@@ -64,7 +61,6 @@ class Users with ChangeNotifier {
         name: "",
         dp: "",
         phone: phone,
-        dob: null,
         individualOrCompany: null,
         description: "",
         address: "",
@@ -78,7 +74,6 @@ class Users with ChangeNotifier {
 
   void update(
       {String name,
-      DateTime dob,
       String address,
       bool isLoggedIn,
       String fcmToken,
@@ -92,7 +87,6 @@ class Users with ChangeNotifier {
       DateTime endTime,
       int userVideoId}) {
     _userModel.name = name;
-    _userModel.dob = dob;
     _userModel.address = address;
     _userModel.isLoggedIn = isLoggedIn;
     _userModel.fcmToken = fcmToken;
@@ -112,7 +106,6 @@ class Users with ChangeNotifier {
     return {
       'name': _userModel.name,
       'phone': _userModel.phone,
-      'dob': _userModel.dob.toString(),
       'address': _userModel.address,
       'fcmToken': _userModel.fcmToken,
       'pin': _userModel.pin,
@@ -163,7 +156,7 @@ class Users with ChangeNotifier {
       temp = true;
       update(
         name: value.data()['name'],
-        dob: DateTime.parse(value.data()['dob']),
+        // dob: DateTime.parse(value.data()['dob']),
         address: value.data()['address'],
         isLoggedIn: _userModel.isLoggedIn,
         fcmToken: value.data()['fcmToken'],

@@ -19,9 +19,8 @@ class ProfilePersonalInfoInit extends StatefulWidget {
 }
 
 class _ProfilePersonalInfoInitState extends State<ProfilePersonalInfoInit> {
-  DateTime selectedDate;
   final nameController = TextEditingController();
-  final dobController = TextEditingController();
+  // final dobController = TextEditingController();
   final addressController = TextEditingController();
   final emailController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -36,7 +35,7 @@ class _ProfilePersonalInfoInitState extends State<ProfilePersonalInfoInit> {
   @override
   void dispose() {
     nameController.dispose();
-    dobController.dispose();
+    // dobController.dispose();
     addressController.dispose();
     emailController.dispose();
     descriptionController.dispose();
@@ -160,36 +159,36 @@ class _ProfilePersonalInfoInitState extends State<ProfilePersonalInfoInit> {
                                           labelText: "Email"),
                                     ),
                                     SizedBox(height: 15),
-                                    TextFormField(
-                                      controller: dobController,
-                                      autovalidateMode: AutovalidateMode.always,
-                                      onTap: () {
-                                        showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(1945),
-                                          lastDate: DateTime.now(),
-                                        ).then((value) {
-                                          if (value == null) return;
-                                          setState(() {
-                                            selectedDate = value;
-                                            dobController.text = selectedDate
-                                                .toString()
-                                                .substring(0, 10);
-                                          });
-                                        });
-                                      },
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please enter some text';
-                                        }
-                                        return null;
-                                      },
-                                      decoration: const InputDecoration(
-                                        icon: Icon(Icons.date_range),
-                                        labelText: 'Date of birth *',
-                                      ),
-                                    ),
+                                    // TextFormField(
+                                    //   controller: dobController,
+                                    //   autovalidateMode: AutovalidateMode.always,
+                                    //   onTap: () {
+                                    //     showDatePicker(
+                                    //       context: context,
+                                    //       initialDate: DateTime.now(),
+                                    //       firstDate: DateTime(1945),
+                                    //       lastDate: DateTime.now(),
+                                    //     ).then((value) {
+                                    //       if (value == null) return;
+                                    //       setState(() {
+                                    //         selectedDate = value;
+                                    //         dobController.text = selectedDate
+                                    //             .toString()
+                                    //             .substring(0, 10);
+                                    //       });
+                                    //     });
+                                    //   },
+                                    //   validator: (value) {
+                                    //     if (value.isEmpty) {
+                                    //       return 'Please enter some text';
+                                    //     }
+                                    //     return null;
+                                    //   },
+                                    //   decoration: const InputDecoration(
+                                    //     icon: Icon(Icons.date_range),
+                                    //     labelText: 'Date of birth *',
+                                    //   ),
+                                    // ),
                                     SizedBox(height: 25),
                                     TextFormField(
                                       controller: descriptionController,
@@ -297,7 +296,6 @@ class _ProfilePersonalInfoInitState extends State<ProfilePersonalInfoInit> {
 
         userProvider.update(
           name: nameController.text,
-          dob: selectedDate,
           address: addressController.text,
           isLoggedIn: true,
           fcmToken: fcmToken,

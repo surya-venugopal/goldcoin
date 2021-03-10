@@ -31,14 +31,13 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 70,
-                        backgroundColor: Colors.blue,
-                        child: Text("Logo"),
-                      )
-                    ],
+                  Hero(
+                    tag: "LOGO",
+                    child: CircleAvatar(
+                      radius: 70,
+                      backgroundColor: Colors.blue,
+                      child: Text("Logo"),
+                    ),
                   ),
                   SizedBox(height: 30),
                   Text(

@@ -87,7 +87,14 @@ class _AdItemState extends State<AdItem> {
   @override
   Widget build(BuildContext context) {
     return documents.length == 0
-        ? Container()
+        ? Container(
+            height: MediaQuery.of(context).size.height * 1 / 5,
+            child: Center(
+                child: Text(
+              "No items found!",
+              style: TextStyle(color: Colors.white),
+            )),
+          )
         : CarouselSlider(
             options: CarouselOptions(
                 autoPlay: true,
@@ -122,8 +129,7 @@ class _AdItemState extends State<AdItem> {
                                   Container(
                                     // height: MediaQuery.of(context).size.height *
                                     //     0.45,
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
+                                    width: MediaQuery.of(context).size.width,
                                     padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       color: Colors.amber[200],
@@ -211,8 +217,7 @@ class _AdItemState extends State<AdItem> {
                                 children: [
                                   Container(
                                     width: MediaQuery.of(context).size.width *
-                                        1 /
-                                        4,
+                                        0.25,
                                     child: Column(
                                       children: [
                                         Center(

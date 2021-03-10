@@ -21,9 +21,9 @@ class ProfilePersonalInfo extends StatefulWidget {
 }
 
 class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
-  DateTime selectedDate;
+  // DateTime selectedDate;
   final nameController = TextEditingController();
-  final dobController = TextEditingController();
+  // final dobController = TextEditingController();
   final addressController = TextEditingController();
   final emailController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -44,12 +44,12 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
     // Provider.of<Users>(context, listen: false).getInfoFromDb;
     nameController.text =
         Provider.of<Users>(context, listen: false).getUser.name;
-    selectedDate = Provider.of<Users>(context, listen: false).getUser.dob;
-    dobController.text = Provider.of<Users>(context, listen: false)
-        .getUser
-        .dob
-        .toString()
-        .substring(0, 10);
+    // selectedDate = Provider.of<Users>(context, listen: false).getUser.dob;
+    // dobController.text = Provider.of<Users>(context, listen: false)
+    //     .getUser
+    //     .dob
+    //     .toString()
+    //     .substring(0, 10);
     addressController.text =
         Provider.of<Users>(context, listen: false).getUser.address;
     emailController.text =
@@ -69,7 +69,7 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
   @override
   void dispose() {
     nameController.dispose();
-    dobController.dispose();
+    // dobController.dispose();
     addressController.dispose();
     emailController.dispose();
     descriptionController.dispose();
@@ -133,8 +133,8 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
                                         final pickedFile =
                                             await picker.getImage(
                                                 source: ImageSource.gallery,
-                                                maxWidth: 400,
-                                                maxHeight: 400);
+                                                maxWidth: 300,
+                                                maxHeight: 300);
                                         setState(() {
                                           _image = File(pickedFile.path);
                                           isUploading = true;
@@ -268,36 +268,36 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
                                           icon: Icon(Icons.email),
                                           labelText: "Email"),
                                     ),
-                                    TextFormField(
-                                      controller: dobController,
-                                      autovalidateMode: AutovalidateMode.always,
-                                      onTap: () {
-                                        showDatePicker(
-                                          context: context,
-                                          initialDate: selectedDate,
-                                          firstDate: DateTime(1945),
-                                          lastDate: DateTime.now(),
-                                        ).then((value) {
-                                          if (value == null) return;
-                                          setState(() {
-                                            selectedDate = value;
-                                            dobController.text = selectedDate
-                                                .toString()
-                                                .substring(0, 10);
-                                          });
-                                        });
-                                      },
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please enter some text';
-                                        }
-                                        return null;
-                                      },
-                                      decoration: const InputDecoration(
-                                        icon: Icon(Icons.date_range),
-                                        labelText: 'Date of birth *',
-                                      ),
-                                    ),
+                                    // TextFormField(
+                                    //   controller: dobController,
+                                    //   autovalidateMode: AutovalidateMode.always,
+                                    //   onTap: () {
+                                    //     showDatePicker(
+                                    //       context: context,
+                                    //       initialDate: selectedDate,
+                                    //       firstDate: DateTime(1945),
+                                    //       lastDate: DateTime.now(),
+                                    //     ).then((value) {
+                                    //       if (value == null) return;
+                                    //       setState(() {
+                                    //         selectedDate = value;
+                                    //         dobController.text = selectedDate
+                                    //             .toString()
+                                    //             .substring(0, 10);
+                                    //       });
+                                    //     });
+                                    //   },
+                                    //   validator: (value) {
+                                    //     if (value.isEmpty) {
+                                    //       return 'Please enter some text';
+                                    //     }
+                                    //     return null;
+                                    //   },
+                                    //   decoration: const InputDecoration(
+                                    //     icon: Icon(Icons.date_range),
+                                    //     labelText: 'Date of birth *',
+                                    //   ),
+                                    // ),
                                     SizedBox(height: 25),
                                     Row(
                                       children: [
@@ -385,7 +385,7 @@ class _ProfilePersonalInfoState extends State<ProfilePersonalInfo> {
                   var userProvider = Provider.of<Users>(context, listen: false);
                   userProvider.update(
                       name: nameController.text,
-                      dob: selectedDate,
+                      // dob: selectedDate,
                       address: addressController.text,
                       isLoggedIn: true,
                       fcmToken: fcmToken,

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:stocklot/main.dart';
 import 'package:stocklot/providers/call.dart';
 import 'package:stocklot/providers/pass_code.dart';
+import 'package:stocklot/providers/wins.dart';
 import 'package:stocklot/screens/call_screen/pickup_screen.dart';
 import 'package:stocklot/screens/search_products.dart';
 import 'package:stocklot/screens/product_screen.dart';
@@ -35,6 +36,7 @@ class _MainScreenState extends State<MainScreen> {
   bool isConnected = false;
 
   DateTime endTime;
+  bool isVerified = false;
 
   start() async {
     var doc = await db.collection("version").doc("version").get();
@@ -44,29 +46,21 @@ class _MainScreenState extends State<MainScreen> {
       });
       if (await Provider.of<Users>(context, listen: false).getInfoFromDb) {
         if (!Provider.of<Users>(context, listen: false).getUser.isLoggedIn) {
-          // CubeUser user1 = CubeUser(
-          //     id: user.userVideoId, login: user.phone, password: user.phone);
-          //
-          // if (CubeSessionManager.instance.isActiveSessionValid()) {
-          //   CubeChatConnection.instance.login(user1).then((user1) {
-          //     Environment.initCustomMediaConfigs(MediaQuery.of(context).size);
-          //     Environment.initCalls(context);
-          //   });
-          // } else {
-          //   createSession(user1).then((session) {
-          //     CubeChatConnection.instance.login(user1).then((value) {
-          //       Environment.initCustomMediaConfigs(
-          //           MediaQuery.of(context).size);
-          //       Environment.initCalls(context);
-          //     });
-          //   });
-          // }
           endTime = Provider.of<Users>(context, listen: false).getUser.endTime;
-          print(endTime.toString());
+          db
+              .collection("User")
+              .doc(Provider.of<Users>(context, listen: false).getUser.phone)
+              .get()
+              .then((doc) {
+            if (doc.data()['isVerified'] != null) {
+              isVerified = doc.data()['isVerified'];
+            }
+          });
           db
               .collection("User")
               .doc(Provider.of<Users>(context, listen: false).getUser.phone)
               .update({"whoCalled": ""});
+
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (ctx) => PassCode("Enter Pin", true)))
@@ -193,6 +187,8 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var user = Provider.of<Users>(context, listen: false).getUser;
+    Provider.of<Wins>(context, listen: false).startTimer();
+
     var ribbonMap = {
       "Stocklot": "ST",
       "Catering": "CT",
@@ -207,7 +203,8 @@ class _MainScreenState extends State<MainScreen> {
       "Seconds": "SD",
       "Spares & Service": "SS",
       "Transport": "TT",
-      "Unit": "UT"
+      "Unit": "UT",
+      "News": "NS"
     };
     return Scaffold(
       appBar: !versionCorrect || _isInit || !isConnected
@@ -236,7 +233,7 @@ class _MainScreenState extends State<MainScreen> {
                     _isLoading || _isInit || !versionCorrect
                         ? Container()
                         : GestureDetector(
-                            onTap: () async{
+                            onTap: () async {
                               var dp = await Navigator.of(context)
                                   .pushNamed(ProfilePersonalInfo.routeName);
                               setState(() {
@@ -250,6 +247,11 @@ class _MainScreenState extends State<MainScreen> {
                                   : NetworkImage(user.dp),
                             ),
                           ),
+                    _isLoading || _isInit || !versionCorrect
+                        ? Container()
+                        : !isVerified
+                            ? Container()
+                            : Container(width: 40, child: Icon(Icons.verified)),
                   ],
                 ),
       body: _isLoading || _isInit

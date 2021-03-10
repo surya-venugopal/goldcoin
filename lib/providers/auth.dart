@@ -1,5 +1,5 @@
+import 'package:stocklot/screens/refererScreen.dart';
 import 'user.dart';
-import '../screens/main_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,8 +40,9 @@ class AuthProvider {
     final _codeController = TextEditingController();
     FirebaseAuth _auth = FirebaseAuth.instance;
     bool isWeb = kIsWeb;
-    if(isWeb){
-      ConfirmationResult confirmationResult = await _auth.signInWithPhoneNumber(phone);
+    if (isWeb) {
+      ConfirmationResult confirmationResult =
+          await _auth.signInWithPhoneNumber(phone);
       showDialog(
           context: context,
           barrierDismissible: false,
@@ -63,14 +64,15 @@ class AuthProvider {
                   color: Colors.blue,
                   onPressed: () async {
                     final code = _codeController.text.trim();
-                    UserCredential result = await confirmationResult.confirm(code);
+                    UserCredential result =
+                        await confirmationResult.confirm(code);
 
                     User user = result.user;
 
                     if (user != null) {
                       Provider.of<Users>(context, listen: false).set(phone);
                       Navigator.pushReplacementNamed(
-                          context, MainScreen.routeName);
+                          context, RefererScreen.routeName);
                     } else {
                       print("Error");
                     }
@@ -79,21 +81,21 @@ class AuthProvider {
               ],
             );
           });
-    }
-    else{
+    } else {
       _auth.verifyPhoneNumber(
           phoneNumber: phone,
           timeout: Duration(seconds: 60),
           verificationCompleted: (AuthCredential credential) async {
             Navigator.of(context).pop();
 
-            UserCredential result = await _auth.signInWithCredential(credential);
+            UserCredential result =
+                await _auth.signInWithCredential(credential);
 
             User user = result.user;
 
             if (user != null) {
               Provider.of<Users>(context, listen: false).set(phone);
-              Navigator.pushReplacementNamed(context, MainScreen.routeName);
+              Navigator.pushReplacementNamed(context, RefererScreen.routeName);
             } else {
               Fluttertoast.showToast(msg: "Error");
             }
@@ -125,18 +127,20 @@ class AuthProvider {
                         onPressed: () async {
                           final code = _codeController.text.trim();
                           AuthCredential credential =
-                          PhoneAuthProvider.credential(
-                              verificationId: verificationId, smsCode: code);
+                              PhoneAuthProvider.credential(
+                                  verificationId: verificationId,
+                                  smsCode: code);
 
                           UserCredential result =
-                          await _auth.signInWithCredential(credential);
+                              await _auth.signInWithCredential(credential);
 
                           User user = result.user;
 
                           if (user != null) {
-                            Provider.of<Users>(context, listen: false).set(phone);
+                            Provider.of<Users>(context, listen: false)
+                                .set(phone);
                             Navigator.pushReplacementNamed(
-                                context, MainScreen.routeName);
+                                context, RefererScreen.routeName);
                           } else {
                             Fluttertoast.showToast(msg: "Error");
                           }
@@ -148,6 +152,5 @@ class AuthProvider {
           },
           codeAutoRetrievalTimeout: (id) => {});
     }
-    }
-
+  }
 }
